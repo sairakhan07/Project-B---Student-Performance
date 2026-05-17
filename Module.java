@@ -35,12 +35,13 @@ public class Student
 {
     private String studentId;
     private String name;
-  
+    private Map<Module, Integer> moduleMarks; // a 'map' storing the modules and their corresponding marks for the student
 
-    public Student(String studentId, String name) 
+    public Student(String studentId, String name) //constructor to initialise the studentId, name, and map for module marks
     {
         this.studentId = studentId;
         this.name = name;
+        this.moduleMarks = new HashMap<>(); 
     }   
 
     public String getStudentId() 
@@ -61,5 +62,22 @@ public class Student
     public void setName(String name) 
     { 
         this.name = name; 
+    }
+
+    public Map<Module, Integer> getModuleMarks() 
+    {
+        return moduleMarks;
+    }
+
+    public void setMark(Module module, int mark) 
+    {
+        if (mark >= 0 && mark <= 100) 
+        {
+           moduleMarks.put(module, mark);
+        } 
+        else 
+        {
+           System.out.println("Invalid mark - must be between 0 and 100.");
+        }
     }
 }
