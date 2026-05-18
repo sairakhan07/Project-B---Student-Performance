@@ -130,4 +130,91 @@ public class Management
         }
         return null; 
     }
+
+    public void displayPerformanceReport(String moduleCode) 
+    {
+        Module targetModule = findModule(moduleCode);
+        if (targetModule == null) 
+        {
+            System.out.println("Error: Module code not found.");
+            return;
+        }//ensures module exists
+
+        List<Integer> AllMarks = new ArrayList<>();
+        
+        int countA = 0, countB = 0, countC = 0, countD = 0, countF = 0;//counters for each grade category
+
+        for (Student s : students) //iterate through all students to collect marks for the specific module
+        {
+            if (s.getModuleMarks().containsKey(targetModule)) //check if the student has a mark for the module
+            {
+                int mark = s.getModuleMarks().get(targetModule);//retrieve the mark for the module
+                AllMarks.add(mark);//add the mark to the list of collected marks
+
+                if (mark >= 70 && mark <= 100) 
+                {
+                    countA++;
+                }
+                else if (mark >= 60 && mark <= 69) 
+                {
+                    countB++;
+                }
+                else if (mark >= 50 && mark <= 59) 
+                {
+                    countC++;
+                }
+                else if (mark >= 40 && mark <= 49) 
+                {
+                    countD++;
+                }
+                else 
+                {
+                    countF++;
+                }
+                //each counter is incremented based on the mark's grade category
+            }
+        }
+
+        if (AllMarks.isEmpty()) 
+        {
+            System.out.println("No marks have been recorded yet for: " + targetModule.getModuleName());
+            return;
+        }
+
+        int min = AllMarks.get(0);//initialise min and max to the first mark in the list to start comparisons
+        int max = AllMarks.get(0);
+        double totalSum = 0;
+
+        for (int mark : AllMarks) 
+        {
+            if (mark < min)//compare each mark to find the minimum
+            {
+               min = mark; //update min if a lower mark is found
+            } 
+            if (mark > max) 
+            {
+                max = mark; 
+            }
+            totalSum += mark;//accumulate the total sum of marks for mean calculation
+        }
+        
+        double mean = totalSum / AllMarks.size();//calculate the mean by dividing the total sum by the number of marks collected
+
+        // display report
+        System.out.println("PERFORMANCE REPORT FOR: " + targetModule.getModuleName());
+        System.out.println("------------------------------");
+        System.out.printf("Mean Mark:    %.2f%%\n", mean);//"%.2f%%" means to format the mean to 2 decimal places followed by a percentage sign
+        System.out.println("Minimum Mark: " + min + "%");
+        System.out.println("Maximum Mark: " + max + "%");
+        System.out.println("------------------------------");
+        System.out.println("GRADE DISTRIBUTION:");
+        
+        int totalStudents = AllMarks.size();//total number of students who have marks for the module used for percentage calculations
+        System.out.printf("Grade A (First Class):        %.1f%%\n", ((double) countA / totalStudents) * 100);//
+        System.out.printf("Grade B (Upper Second Class): %.1f%%\n", ((double) countB / totalStudents) * 100);
+        System.out.printf("Grade C (Lower Second Class): %.1f%%\n", ((double) countC / totalStudents) * 100);
+        System.out.printf("Grade D (Third Class):        %.1f%%\n", ((double) countD / totalStudents) * 100);
+        System.out.printf("Grade F (Fail):               %.1f%%\n", ((double) countF / totalStudents) * 100);
+        System.out.println("------------------------------");
+    }
 }
