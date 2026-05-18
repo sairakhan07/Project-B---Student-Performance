@@ -81,3 +81,15 @@ public class Student
         }
     }
 }
+
+public class Management
+{
+    private List<Student> students;
+    private List<Module> modules;
+
+    public Management() 
+    {
+        this.students = new ArrayList<>();
+        this.modules = new ArrayList<>();
+    }
+}
