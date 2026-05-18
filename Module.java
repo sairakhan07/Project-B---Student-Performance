@@ -106,4 +106,28 @@ public class Management
         modules.add(newModule);
         System.out.println("Module '" + name + "' registered successfully.");
     }
+
+    public Student findStudent(String id) 
+    {
+        for (Student s : students) //s refers to the individual student in the list of students
+        {
+            if (s.getStudentId().equalsIgnoreCase(id)) //'equalsIgnoreCase' means to ignore letter case
+            {
+                return s; 
+            }
+        }
+        return null; 
+    }
+
+    public Module findModule(String code) 
+    {
+        for (Module m : modules) //m refers to the individual module in the list of modules
+        {
+            if (m.getModuleCode().equalsIgnoreCase(code)) 
+            {
+                return m; 
+            }
+        }
+        return null; 
+    }
 }
