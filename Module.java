@@ -92,4 +92,18 @@ public class Management
         this.students = new ArrayList<>();
         this.modules = new ArrayList<>();
     }
+
+    public void addStudent(String id, String name) 
+    {
+        Student newStudent = new Student(id, name);
+        students.add(newStudent);
+        System.out.println("Student '" + name + "'  has been added.");
+    }
+
+    public void addModule(String code, String name) 
+    {
+        Module newModule = new Module(code, name);
+        modules.add(newModule);
+        System.out.println("Module '" + name + "' registered successfully.");
+    }
 }
