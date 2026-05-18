@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
 public class Module //public means that this class can be accessed by any other class
 {
     private String moduleCode;
@@ -31,7 +37,7 @@ public class Module //public means that this class can be accessed by any other 
 
 }
 
-public class Student 
+class Student 
 {
     private String studentId;
     private String name;
@@ -82,7 +88,7 @@ public class Student
     }
 }
 
-public class Management
+class Management
 {
     private List<Student> students;
     private List<Module> modules;
@@ -217,9 +223,64 @@ public class Management
         System.out.printf("Grade F (Fail):               %.1f%%\n", ((double) countF / totalStudents) * 100);
         System.out.println("------------------------------");
     }
+
+    public void displayGradeProfile(String studentId) 
+    {
+        Student s = findStudent(studentId);
+        if (s == null) 
+        {
+            System.out.println("Error: Student record not found.");
+            return;
+        }//ensures student exists before attempting to display their grade profile
+
+        System.out.println("-------------------------------");
+        System.out.println("GRADE PROFILE FOR: " + s.getName().toUpperCase());
+        System.out.println("--------------------------------");
+        
+        if (s.getModuleMarks().isEmpty()) 
+        {
+            System.out.println("No module marks recorded for this student.");
+        } 
+        else 
+        {
+            for (Map.Entry<Module, Integer> entry : s.getModuleMarks().entrySet()) //'Map.Entry<Module, Integer>' means that each entry in the map consists of a Module as the key and an Integer (the mark) as the value;
+            {
+                Module module = entry.getKey();//retrieve the module from the map entry
+                int mark = entry.getValue();  // retrieve the mark from the map entry
+                
+                String grade;
+                String classification;
+                
+                if (mark >= 70) 
+                { 
+                    grade = "A"; classification = "First Class"; 
+                }
+                else if (mark >= 60) 
+                { 
+                    grade = "B"; classification = "Upper Second Class"; 
+                }
+                else if (mark >= 50) 
+                { 
+                    grade = "C"; classification = "Lower Second Class"; 
+                }
+                else if (mark >= 40) 
+                { 
+                    grade = "D"; classification = "Third Class"; 
+                }
+                else 
+                { 
+                    grade = "F"; classification = "Fail"; 
+                }//determine the grade and classification based on the mark using the same thresholds as in the module report
+
+                System.out.printf("%s: %d%% -> Grade %s (%s)\n", module.getModuleCode(), mark, grade, classification);
+                //display the module code, mark, grade, and classification for each module the student has marks for in a formatted manner
+            }
+        }
+        System.out.println("--------------------------------");
+    }
 }
 
-public class Main 
+class Main 
 {
     private static Management system = new Management(); //instance of the Management class to manage students and modules
     private static Scanner scanner = new Scanner(System.in); //scanner for reading user input from the terminal
@@ -310,7 +371,8 @@ public class Main
             System.out.println("3. Input/Update student marks");
             System.out.println("4. Generate module performance analytics report");
             System.out.println("5. Exit system");
-            System.out.print("Select an option (1-5): ");
+            System.out.println("6. View student grade profile");
+            System.out.print("Select an option (1-6): ");
 
             String choice = scanner.nextLine().trim();//read the user's menu choice and 'trim' any extra whitespace
 
@@ -332,9 +394,19 @@ public class Main
                     System.out.println("Exiting application...");
                     run = false;
                     break;
+                case "6"://if the user selects option 6, call the method to handle viewing a student's grade profile
+                    viewStudentGrades();
+                    break;
                 default:
-                    System.out.println("Invalid choice. Please select an option between 1 and 5.");
+                    System.out.println("Invalid choice. Please select an option between 1 and 6.");
             }
         }
+    }
+
+    private static void viewStudentGrades() 
+    {
+        System.out.print("Enter Student ID: ");
+        String id = scanner.nextLine().trim();
+        system.displayGradeProfile(id);
     }
 }
