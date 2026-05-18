@@ -218,3 +218,123 @@ public class Management
         System.out.println("------------------------------");
     }
 }
+
+public class Main 
+{
+    private static Management system = new Management(); //instance of the Management class to manage students and modules
+    private static Scanner scanner = new Scanner(System.in); //scanner for reading user input from the terminal
+
+    private static void inputSudent() 
+    {
+        System.out.print("Enter Student ID: ");
+        String id = scanner.nextLine().trim();
+        System.out.print("Enter Student Full Name: ");
+        String name = scanner.nextLine().trim();
+
+        if (id.isEmpty() || name.isEmpty()) 
+        {
+            System.out.println("Error: Fields cannot be blank.");
+            return;
+        }
+        system.addStudent(id, name);
+    }
+
+    private static void inputModule() 
+    {
+        System.out.print("Enter Module Code: ");
+        String code = scanner.nextLine().trim();
+        System.out.print("Enter Module Name: ");
+        String title = scanner.nextLine().trim();
+
+        if (code.isEmpty() || title.isEmpty()) 
+        {
+            System.out.println("Error: Fields cannot be blank.");
+            return;
+        }
+        system.addModule(code, title);
+    }
+
+    private static void inputMarks() 
+    {
+        System.out.print("Enter Student ID: ");
+        String id = scanner.nextLine().trim();
+        Student currentStudent = system.findStudent(id);
+
+        if (currentStudent == null) 
+        {
+            System.out.println("Error: Student record not found.");
+            return; 
+        }
+
+        System.out.print("Enter Module Code: ");
+        String code = scanner.nextLine().trim();
+        Module currentModule = system.findModule(code);
+
+        if (currentModule == null) 
+        {
+            System.out.println("Error: Module code not found.");
+            return;
+        }
+
+        System.out.print("Enter Mark (0-100): ");
+        String markInput = scanner.nextLine().trim();
+        
+        try 
+        {
+            int numMark = Integer.parseInt(markInput);//converts the string input for the mark into an integer
+            currentStudent.setMark(currentModule, numMark);//calls the 'setMark' method of the Student class to update the mark for the specified module
+        } 
+        catch (NumberFormatException e)//handles the case where the user input for the mark is not a valid integer
+        {
+            System.out.println("Error: Invalid entry. Mark must be a numeric whole number.");
+        }
+    }
+
+    private static void moduleReport() 
+    {
+        System.out.print("Enter Module Code: ");
+        String code = scanner.nextLine().trim();
+        system.displayPerformanceReport(code);//
+    }
+
+    public static void main(String[] args) 
+    {
+        boolean run = true;
+        System.out.println("Welcome to the Bolton University Student Performance App");
+
+        while (run) 
+        {
+            System.out.println("\n--- MAIN MENU ---");
+            System.out.println("1. Add a new student");
+            System.out.println("2. Register a new module");
+            System.out.println("3. Input/Update student marks");
+            System.out.println("4. Generate module performance analytics report");
+            System.out.println("5. Exit system");
+            System.out.print("Select an option (1-5): ");
+
+            String choice = scanner.nextLine().trim();//read the user's menu choice and 'trim' any extra whitespace
+
+            switch (choice) 
+            {
+                case "1"://if the user selects option 1, call the method to handle creating a new student
+                    inputSudent();//call the method to handle creating a new student
+                    break;
+                case "2"://if the user selects option 2, call the method to handle registering a new module
+                    inputModule();
+                    break;
+                case "3"://if the user selects option 3, call the method to handle inputting/updating student marks
+                    inputMarks();
+                    break;
+                case "4"://if the user selects option 4, call the method to handle generating the module performance report
+                    moduleReport();
+                    break;
+                case "5"://if the user selects option 5, print a message and set 'run' to false to exit the loop and end the application
+                    System.out.println("Exiting application...");
+                    run = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select an option between 1 and 5.");
+            }
+        }
+    }
+}
